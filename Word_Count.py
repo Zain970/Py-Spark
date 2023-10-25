@@ -1,24 +1,31 @@
 from pyspark import SparkContext
 from sys import stdin
 
-sc = SparkContext("local[*]", "wordcount")
+# When running the file directly
+if __name__ == "main":
 
-sc.setLogLevel("ERROR")
+    # Common lines
+    sc = SparkContext("local[*]", "wordcount")
 
-input = sc.textFile("E:/Big data course/Week-09/DataSets/word_count_1.txt")
+    # Change the logging level to only display errors
+    sc.setLogLevel("ERROR")
 
-words = input.flatMap(lambda x: x.split(" "))
+    # Reading the text file
+    input = sc.textFile("E:/Big data course/Week-09/DataSets/word_count_1.txt")
 
-wordCounts = words.map(lambda x: (x.lower(), 1))
+    words = input.flatMap(lambda x: x.split(" "))
 
-finalCount = wordCounts.reduceByKey(lambda x, y: x + y)
+    wordCounts = words.map(lambda x: (x.lower(), 1))
 
-sortedResult = finalCount.sortBy(lambda x: x[1],False)
+    finalCount = wordCounts.reduceByKey(lambda x, y: x + y)
 
-result = sortedResult.collect()
+    sortedResult = finalCount.sortBy(lambda x: x[1], False)
 
-for a in result:
-    print(a)
+    result = sortedResult.collect()
 
-# To check the spark history server , so stopping the program termination
-stdin.readline()
+    for a in result:
+        print(a)
+
+    stdin.readline()
+else:
+    print("Not executed directly")
