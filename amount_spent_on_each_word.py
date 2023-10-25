@@ -25,7 +25,14 @@ final_mapped = words.map(lambda x: (x[1].lower(), x[0]))
 
 total = final_mapped.reduceByKey(lambda x, y: x + y)
 
-sorted_result = total.sortBy(lambda x: x[1],False)
+sorted_result = total.sortBy(lambda x: x[1], False)
+
+print("-> ", sorted_result.getNumPartitions())
+
+sorted_result = sorted_result.repartition(8)
+print("-> ", sorted_result.getNumPartitions())
+
+# sorted_result.saveAsTextFile("C:/Users/zain9/OneDrive/Desktop/Spark-Python/Week-10/Output")
 
 result = sorted_result.take(20)
 
